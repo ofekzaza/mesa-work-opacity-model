@@ -9,6 +9,7 @@ names = [
     "mlt++",
     "supereduction_a=2",
     "normal",
+    "ours_interval_3",
 ]
 #'supereduction_a=5' empty it doesnt run
 # Initialize the plot
