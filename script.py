@@ -1,0 +1,35 @@
+import mesa_reader as mr
+import matplotlib.pyplot as plt
+
+# List of history file names (without extensions)
+names = ['ours_interval_5','ours_interval_10','ours_interval_50', 'mlt++', 'supereduction_a=2', 'normal']
+#'supereduction_a=5' empty it doesnt run
+# Initialize the plot
+plt.figure()
+
+mass = 40
+
+# Iterate over each history file
+for name in names:
+    path = f'{mass}m-{name}/LOGS/history.data'
+    try:
+        # Load the history data
+        history = mr.MesaData(path)
+        # Plot log_L vs. log_Teff
+        plt.plot(history.log_Teff, history.log_L, label=name)
+    except FileNotFoundError:
+        print(f"Warning: {path}.data not found. Skipping.")
+
+# Customize the plot
+plt.xlabel('log(Teff) [K]')
+plt.ylabel('log(Luminosity / L☉)')
+plt.title(f'{mass} Mass Star Hertzsprung-Russell Diagram')
+plt.gca().invert_xaxis()  # HR diagrams have Teff decreasing to the right
+plt.grid(True)
+plt.legend()
+plt.tight_layout()
+
+# Save the plot
+plt.savefig('hr_diagram_comparison.png', dpi=300)
+plt.close()
+
