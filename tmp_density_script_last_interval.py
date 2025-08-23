@@ -34,7 +34,7 @@ for name in names:
 # Customize the plot
 plt.xlabel(r"$\log(\rho)\ \,[\mathrm{g/cm^3}]$")
 plt.ylabel(r"$\log(T)\ \,[\mathrm{K}]$")
-plt.title("mass {mass}: Temperature vs Density at onset of Carbon burning")
+plt.title(f"mass {mass}: Temperature vs Density at onset of Carbon burning")
 # plt.gca().invert_xaxis()  # HR diagrams have Teff decreasing to the right
 plt.grid(True)
 plt.legend()
