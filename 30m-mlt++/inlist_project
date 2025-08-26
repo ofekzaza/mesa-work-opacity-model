@@ -1,0 +1,132 @@
+! inlist to evolve a 15 solar mass star
+
+! For the sake of future readers of this file (yourself included),
+! ONLY include the controls you are actually using.  DO NOT include
+! all of the other controls that simply have their default values.
+
+&star_job
+  ! see star/defaults/star_job.defaults
+
+  ! begin with a pre-main sequence model
+    create_pre_main_sequence_model = .true.
+
+  ! save a model at the end of the run
+    save_model_when_terminate = .false.
+    save_model_filename = '30M_at_TAMS.mod'
+
+  ! display on-screen plots
+    pgstar_flag = .true.
+
+/ ! end of star_job namelist
+
+
+&eos
+  ! eos options
+  ! see eos/defaults/eos.defaults
+
+/ ! end of eos namelist
+
+
+&kap
+  ! kap options
+  ! see kap/defaults/kap.defaults
+  use_Type2_opacities = .true.
+  Zbase = 0.02
+
+/ ! end of kap namelist
+
+
+&controls
+  ! see star/defaults/controls.defaults
+
+  ! starting specifications
+    initial_mass = 30 ! in Msun units
+    initial_z = 0.02
+
+  ! when to stop
+
+    ! stop when the star nears ZAMS (Lnuc/L > 0.99)
+    !Lnuc_div_L_zams_limit = 0.99d0
+    !stop_near_zams = .true.
+
+    ! stop when the center mass fraction of h1 drops below this limit
+    !xa_central_lower_limit_species(1) = 'o16'
+    !xa_central_lower_limit(1) = 1d-3
+    !xa_surface_upper_limit_species(1) = 'o16'
+    !xa_surface_upper_limit(1) = 1d-3
+    stop_at_phase_C_Burn = .true.
+    !power_h_burn_upper_limit = 1d99
+    !xa_surface_upper_limit_species(1) = 'c12'
+    !xa_surface_upper_limit(1) = 0.5
+
+  ! wind
+
+  ! atmosphere
+
+  ! rotation
+
+  ! element diffusion
+
+  ! mlt
+
+    !super reduction option
+    !MLT_option = 'TDC'
+    !use_superad_reduction = .true.
+    !superad_reduction_Gamma_limit = 0.3d0 ! default is 0.5d0
+    !superad_reduction_Gamma_limit_scale = 5d0
+    !superad_reduction_Gamma_inv_scale = 5d0
+    !superad_reduction_diff_grads_limit = 1d-2 ! default is 1d-3
+    !superad_reduction_limit = -1d0
+    
+    !mlt ++ option
+    MLT_option = 'TDC'
+    okay_to_reduce_gradT_excess = .true.
+    gradT_excess_max_change = 0.01d0
+  
+  ! mixing
+
+  ! timesteps
+      time_delta_coeff = 2
+
+      ! 1d-3
+      varcontrol_target   = 1d-4
+      timestep_factor_for_retries = 0.75
+            
+      !never_skip_hard_limits = .false. !was true
+      !min_xa_hard_limit = -1d-5
+      !min_xa_hard_limit_for_highT = -3d-5
+
+      !delta_lgTeff_limit =  0.01
+      !delta_lgL_limit = 0.1     
+      !delta_lgL_He_limit = 0.1
+
+      !delta_lgRho_cntr_limit = 0.03
+      !delta_lgRho_cntr_hard_limit = 0.1
+      !delta_lgRho_limit = 0.1 
+      
+      !delta_lgT_cntr_limit_only_after_near_zams = .true.
+      !delta_lgT_cntr_limit = 0.002  
+      !delta_lgT_cntr_hard_limit = 0.01
+
+      !delta_lgT_max_limit_only_after_near_zams = .true.
+      !delta_lgT_max_limit = 0.002     
+      !delta_lgT_max_hard_limit = 0.01
+
+      !dX_div_X_limit(2) = -1 ! for he4
+
+      !dX_nuc_drop_limit = 2d-2
+      !dX_nuc_drop_limit_at_high_T = -1  ! default = -1 = same as dX_nuc_drop_limit
+      !dX_nuc_drop_min_X_limit = 1d-3
+      !dX_nuc_drop_max_A_limit = 52   
+      !dX_nuc_drop_hard_limit = 1d99
+
+  ! mesh
+
+  ! solver
+     ! options for energy conservation (see MESA V, Section 3)
+     energy_eqn_option = 'dedt'
+     use_gold_tolerances = .true.
+
+  ! output
+
+/ ! end of controls namelist
