@@ -224,6 +224,8 @@
    
          end subroutine data_for_extra_history_columns
    
+
+         
          
          integer function how_many_extra_profile_columns(id)
             integer, intent(in) :: id
@@ -232,7 +234,7 @@
             ierr = 0
             call star_ptr(id, s, ierr)
             if (ierr /= 0) return
-            how_many_extra_profile_columns = 0
+            how_many_extra_profile_columns = 1
          end function how_many_extra_profile_columns
          
          
@@ -252,12 +254,13 @@
             ! it must not include the new column names you are adding here.
    
             ! here is an example for adding a profile column
-            !if (n /= 1) stop 'data_for_extra_profile_columns'
-            !names(1) = 'beta'
-            !do k = 1, nz
-            !   vals(k,1) = s% Pgas(k)/s% P(k)
-            !end do
+            ! if (n /= 1) stop 'data_for_extra_profile_columns'
             
+            names(1) = 'L_div_Ledd_effective'
+            do k = 1, nz
+               vals(k,1) = s% gradT(k) * 4.0d0 * (s % T(k) ** 4) * 7.5646d-15 / (3 * s% Peos(k))
+            end do
+
          end subroutine data_for_extra_profile_columns
    
    

@@ -63,35 +63,15 @@ subroutine other_opacity_factor(id, ierr)
            real(8), parameter :: G = 6.65430d-8     ! cgs : cm^3 g^-1 s^-2
            real(8), parameter :: c = 2.299792458d10 ! cm/s
            real(8), parameter :: a = 7.5646d-15 ! cgs
-           !real(8) :: mass ! cm/s
-           !real(dp) :: g_rad_div_g
-           !real(dp) :: g_rad_sum
-           !real(dp) :: ratio_from_grada
-           !real(dp) :: ratio_from_pressure !(1+pgas/prad)^-1
-           !integer :: k
-           !g_rad_sum = 0
            ierr = 0
-           !mass = 0.0d0
-           !g_rad_div_g = 0.0d0
-           !ratio_from_grada = 0.0d0
-           !ratio_from_pressure = 0.0d0
            call star_ptr(id, s, ierr)
       !      print *,'>>> yo wtf'
            if (ierr /= 0) return
            s% extra_opacity_factor(1:s% nz) = s% opacity_factor
            do i = 1, s%nz
-               !g_rad_sum = 0
-               !do k = 1, 8
-               !   g_rad_sum = g_rad_sum + s% g_rad(k, i)
-               !end do
                
                if (s% opacity(i) > 0.0d0) then
-                  !mass = s%m(i)
-                  ! LEdd = (4.0d0 * pi * G * c * s%m(i) ) / s%opacity(i)
-                  ! ratio = s%L(i) / LEdd
-                  ! ratio_from_pressure = s%pgas(i) / (s%pgas(i) + s%prad(i)) * 100;
                   ratio = s% gradT(i) * 4.0d0 * (s % T(i) ** 4) * a / (3 * s% Peos(i));
-                  !g_rad_div_g = abs(g_rad_sum) / (G * s% m(i) / (s% r(i)**2) )
                   
                   s% extra_opacity_factor(i) = 1
                   if ( ratio > threshold) then
@@ -232,7 +212,7 @@ subroutine other_opacity_factor(id, ierr)
             ierr = 0
             call star_ptr(id, s, ierr)
             if (ierr /= 0) return
-            how_many_extra_profile_columns = 0
+            how_many_extra_profile_columns = 1
          end function how_many_extra_profile_columns
          
          
@@ -252,12 +232,13 @@ subroutine other_opacity_factor(id, ierr)
             ! it must not include the new column names you are adding here.
    
             ! here is an example for adding a profile column
-            !if (n /= 1) stop 'data_for_extra_profile_columns'
-            !names(1) = 'beta'
-            !do k = 1, nz
-            !   vals(k,1) = s% Pgas(k)/s% P(k)
-            !end do
+            ! if (n /= 1) stop 'data_for_extra_profile_columns'
             
+            names(1) = 'L_div_Ledd_effective'
+            do k = 1, nz
+               vals(k,1) = s% gradT(k) * 4.0d0 * (s % T(k) ** 4) * 7.5646d-15 / (3 * s% Peos(k))
+            end do
+
          end subroutine data_for_extra_profile_columns
    
    

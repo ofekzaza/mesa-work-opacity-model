@@ -3,19 +3,20 @@ import matplotlib.pyplot as plt
 
 # List of history file names (without extensions)
 names = [
-    "ours_interval_5",
-    "ours_interval_10",
-    "ours_interval_50",
-    "mlt++",
-    "supereduction_a=2",
     "normal",
     "ours_interval_3",
+    "ours_interval_5",
+    "ours_interval_10",
+    "mlt++",
+    "supereduction_a=2",
+    # "ours_interval_50",
+    # "supereduction_a=5",
 ]
 #'supereduction_a=5' empty it doesnt run
 # Initialize the plot
 plt.figure()
 
-mass = 40
+mass = 30
 
 # Iterate over each history file
 for name in names:
@@ -40,5 +41,5 @@ plt.legend()
 plt.tight_layout()
 
 # Save the plot
-plt.savefig("hr_diagram_comparison.png", dpi=300)
+plt.savefig(f"mass_{mass}_hr_diagram_comparison.png", dpi=300)
 plt.close()

@@ -1,26 +1,28 @@
 import mesa_reader as mr
 import matplotlib.pyplot as plt
 
+mass = 40
+
 # List of history file names (without extensions)
 names = [
+    "ours_interval_3",
     "ours_interval_5",
     "ours_interval_10",
-    "ours_interval_50",
     "mlt++",
     "supereduction_a=2",
     "normal",
-    "ours_interval_3",
+    "ours_interval_50",
+    # "supereduction_a=5",
 ]
 #'supereduction_a=5' empty it doesnt run
 # Initialize the plot
 plt.figure()
 
-mass = 40
-
 # Iterate over each history file
 for name in names:
     path = f"{mass}m-{name}/LOGS"
     try:
+        print(path)
         # Load the history data
         history = mr.MesaLogDir(path)
         # Plot log_L vs. log_Teff
@@ -41,5 +43,5 @@ plt.legend()
 plt.tight_layout()
 
 # Save the plot
-plt.savefig("Temperature vs Density .png", dpi=300)
+plt.savefig(f"Mass_{mass}_Temperature_vs_Density.png", dpi=300)
 plt.close()

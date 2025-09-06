@@ -43,6 +43,7 @@
 
 
 !# Structure
+   extra_opacity_factor
    !logM ! log10(m/Msun)
    !log_mass
    dm ! cell mass (grams)
