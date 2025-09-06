@@ -195,7 +195,7 @@ log_du_kick_div_du
 L_div_Ledd_effective
 """
 
-mass = 30
+mass = 40
 
 y_axises = [
     "L_div_Ledd_effective",
@@ -214,10 +214,10 @@ names = [
     "ours_interval_10",
     "mlt++",
     "supereduction_a=2",
-    # "ours_interval_50",
+    "ours_interval_40",
     # "supereduction_a=5",
 ]
-y_axis = "L_div_Ledd_effective"
+
 #'supereduction_a=5' empty it doesnt run
 # Initialize the plot
 def plot(x_axis: str, x_units: str, y_axis: str, y_units: str):

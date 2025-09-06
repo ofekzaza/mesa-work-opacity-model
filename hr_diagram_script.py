@@ -9,14 +9,14 @@ names = [
     "ours_interval_10",
     "mlt++",
     "supereduction_a=2",
-    # "ours_interval_50",
+    "ours_interval_40",
     # "supereduction_a=5",
 ]
 #'supereduction_a=5' empty it doesnt run
 # Initialize the plot
 plt.figure()
 
-mass = 30
+mass = 40
 
 # Iterate over each history file
 for name in names:

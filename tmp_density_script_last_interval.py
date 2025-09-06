@@ -11,7 +11,7 @@ names = [
     "mlt++",
     "supereduction_a=2",
     "normal",
-    "ours_interval_50",
+    "ours_interval_40",
     # "supereduction_a=5",
 ]
 #'supereduction_a=5' empty it doesnt run
