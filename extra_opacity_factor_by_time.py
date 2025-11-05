@@ -195,7 +195,7 @@ log_du_kick_div_du
 L_div_Ledd_effective
 """
 
-mass = 30
+mass = 40
 
 y_axises = [
     "L_div_Ledd_effective",
@@ -209,12 +209,13 @@ y_axises = [
 # List of history file names (without extensions)
 names = [
     "normal",
+    "ours_interval_2",
     "ours_interval_3",
-    "ours_interval_5",
-    "ours_interval_10",
+    # "ours_interval_5",
+    # "ours_interval_10",
     "mlt++",
     "supereduction_a=2",
-    "ours_interval_40",
+    # "ours_interval_40",
     # "supereduction_a=5",
 ]
 
@@ -230,7 +231,7 @@ import matplotlib.pyplot as plt
 
 
 def plot(x_axis: str, x_units: str, y_axis: str, y_units: str):
-    for index in [3, 5, 10]:
+    for index in [2]: # SET HEATMAP index
         name = f"ours_interval_{index}"
         path = f"{mass}m-{name}/LOGS"
         try:
