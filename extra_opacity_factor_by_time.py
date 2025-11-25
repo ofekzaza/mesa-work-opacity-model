@@ -209,12 +209,13 @@ y_axises = [
 # List of history file names (without extensions)
 names = [
     "normal",
+    "ours_thermal_time",
     "ours_interval_2",
-    "ours_interval_3",
+    # "ours_interval_3",
     # "ours_interval_5",
     # "ours_interval_10",
-    "mlt++",
-    "supereduction_a=2",
+    # "mlt++",
+    # "supereduction_a=2",
     # "ours_interval_40",
     # "supereduction_a=5",
 ]

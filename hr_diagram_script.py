@@ -3,14 +3,15 @@ import matplotlib.pyplot as plt
 
 # List of history file names (without extensions)
 names = [
-    "normal",
+    # "normal",
     "ours_interval_2",
-    "ours_interval_3",
+    # "ours_interval_3",
+    "ours_thermal_time",
     # "ours_interval_5",
     # "ours_interval_10",
     "mlt++",
     "supereduction_a=2",
-    "ours_interval_40",
+    # "ours_interval_40",
     # "supereduction_a=5",
 ]
 #'supereduction_a=5' empty it doesnt run

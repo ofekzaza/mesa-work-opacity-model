@@ -208,7 +208,8 @@ y_axises = [
 
 # List of history file names (without extensions)
 names = [
-    "normal",
+    # "normal",
+    "ours_thermal_time",
     "ours_interval_2",
     # "ours_interval_3",
     # "ours_interval_5",

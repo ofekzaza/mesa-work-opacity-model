@@ -3,13 +3,14 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 names = [
-    "ours_interval_5",
-    "ours_interval_10",
-    "ours_interval_50",
+    "ours_interval_2",
+    "ours_thermal_time",
+    # "ours_interval_10",
+    # "ours_interval_50",
     "mlt++",
     "supereduction_a=2",
-    "normal",
-    "ours_interval_3",
+    # "normal",
+    # "ours_interval_3",
 ]
 mass = 40
 
