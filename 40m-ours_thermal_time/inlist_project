@@ -38,6 +38,7 @@
 
 &controls
   ! see star/defaults/controls.defaults
+    terminal_interval = 1000
 
   ! starting specifications
     initial_mass = 40 ! in Msun units

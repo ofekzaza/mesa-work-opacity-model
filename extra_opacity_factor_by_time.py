@@ -208,9 +208,9 @@ y_axises = [
 
 # List of history file names (without extensions)
 names = [
-    "normal",
+    # "normal",
     "ours_thermal_time",
-    "ours_interval_2",
+    # "ours_interval_2",
     # "ours_interval_3",
     # "ours_interval_5",
     # "ours_interval_10",
@@ -234,6 +234,7 @@ import matplotlib.pyplot as plt
 def plot(x_axis: str, x_units: str, y_axis: str, y_units: str):
     for index in [2]: # SET HEATMAP index
         name = f"ours_interval_{index}"
+        name = "ours_thermal_time"
         path = f"{mass}m-{name}/LOGS"
         try:
             print(path)

@@ -46,7 +46,7 @@
            type (star_info), pointer :: s
 
            integer :: i, j
-           real(8) :: LEdd, ratio
+           real(8) :: LEdd, ratio, opacity_target
            real(8), parameter :: threshold = 0.80d0
            real(8), parameter :: pi = 3.141592653589893d0
            real(8), parameter :: G = 6.65430d-8     ! cgs : cm^3 g^-1 s^-2
@@ -71,7 +71,9 @@
                   if ( ratio > threshold) then
                      opacity_target = 1 / (1 + ratio - threshold)
                      ! you can calculate kh_timescale by sum(E_grav(n) from i to s%nz / L_photosphere which is probably s%L(s%nz)
-                     s% extra_opacity_factor(i) = opacity_target ** EXP(- s% dt_next_unclipped / s% kh_timescale)
+                     !s% extra_opacity_factor(i) = opacity_target ** EXP(- s% dt_years / s% kh_timescale)
+                      s% extra_opacity_factor(i) = opacity_target + EXP(- s% dt_years / s% kh_timescale) * (1 - opacity_target)
+                     ! print *, '*s% extra_opacity_factor(i)', s% extra_opacity_factor(i)
                   end if 
                end if
            end do
@@ -248,7 +250,7 @@
             ierr = 0
             call star_ptr(id, s, ierr)
             if (ierr /= 0) return
-            how_many_extra_history_header_items = 0
+            how_many_extra_history_header_items = 1
          end function how_many_extra_history_header_items
    
    
@@ -261,6 +263,8 @@
             ierr = 0
             call star_ptr(id,s,ierr)
             if(ierr/=0) return
+            names(1) = 'dt_years'
+            vals(1) = s% dt_years
    
             ! here is an example for adding an extra history header item
             ! also set how_many_extra_history_header_items

@@ -1,134 +1,106 @@
+import os
+import json
+import numpy as np
 import mesa_reader as mr
 import matplotlib.pyplot as plt
-import numpy as np
 
-names = [
-    "ours_interval_2",
-    "ours_thermal_time",
-    # "ours_interval_10",
-    # "ours_interval_50",
-    "mlt++",
-    "supereduction_a=2",
-    # "normal",
-    # "ours_interval_3",
-]
-mass = 40
 
-# Initialize figures for the 6 graph types
-fig1, ax1 = plt.subplots()  # Opacity vs T
-fig2, ax2 = plt.subplots()  # L vs L_Edd
-fig3, ax3 = plt.subplots()  # Fluxes
-fig4, ax4 = plt.subplots()  # Opacity vs Flux
-fig5a, ax5a = plt.subplots()  # Central opacity vs time
-fig5b, ax5b = plt.subplots()  # Surface L/Ledd vs time
-fig6, ax6 = plt.subplots()  # Luminosity fractions
+def plot(model_var: str, y_axis: str, y_units: str, value_axis: str):
+    """
+    model_var: the field holding model number (always 'model_number')
+    y_axis: the vertical axis variable (e.g. 'logRho')
+    value_axis: the heatmap color variable (e.g. 'extra_opacity_factor')
+    """
 
-for name in names:
+    mass = 40
+    name = "ours_thermal_time"
     path = f"{mass}m-{name}/LOGS"
-    try:
-        history = mr.MesaLogDir(path)
-        prof = mr.MesaData(f"{path}/profile{history.profile_numbers[-1]}.data")
 
-        # 1.2 Opacity vs Temperature
-        # if "opacity" in prof.columns:
-        # (line,) = ax1.plot(prof.logT, prof.opacity, label=name, linewidth=0.8)
-        # # if "eff_opacity" in prof.columns:
-        # ax1.plot(prof.logT, prof.eff_opacity, "--", color=line.get_color())
+    print(f"Reading profiles from: {path}")
 
-        # 2. Luminosity vs Eddington Luminosity
-        # if "luminosity" in prof.columns and "opacity" in prof.columns:
+    profiles = []
 
-        # ax2.plot(prof.mass, prof.luminosity, label=f"L {name}", linewidth=0.8)
-        ax2.plot(prof.mass, prof.log_L_div_Ledd, "--", label=f"L_Edd {name}", linewidth=0.8)
+    # Read all profiles and collect model numbers
+    model_numbers = []
+    Y_all = []
+    VAL_all = []
 
-        # 3. Radiative vs Eddington Flux
-        # if "luminosity" in prof.columns and "radius" in prof.columns:
-        r_cm = prof.radius * 6.957e10
-        L_cgs = prof.luminosity * 3.828e33
-        F_rad = L_cgs / (4 * np.pi * r_cm**2)
-        F_edd = (2.998e10 * 6.6743e-8 * (prof.mass * 1.989e33)) / (r_cm**2 * prof.opacity)
-        ax3.plot(r_cm / 6.957e10, F_rad, label=f"F_rad {name}", linewidth=0.8)
-        ax3.plot(r_cm / 6.957e10, F_edd, "--", label=f"F_Edd {name}", linewidth=0.8)
+    for i in range(1, 9999):
+        f_path = f"{path}/profile{i}.data"
+        if not os.path.exists(f_path):
+            break
 
-        # 4. Opacity vs Flux
-        # if "opacity" in prof.columns:
-        r_cm = prof.radius * 6.957e10
-        L_cgs = prof.luminosity * 3.828e33
-        F_rad = L_cgs / (4 * np.pi * r_cm**2)
-        ax4.scatter(prof.opacity, F_rad, s=5, label=name, alpha=0.6)
+        prof = mr.MesaData(f_path)
 
-        # 5.1 Central Opacity vs Time
-        # if "center_opacity" in history.columns:
-        ax5a.plot(history.star_age, history.center_opacity, label=name, linewidth=0.8)
+        # Ensure required fields exist
+        if not hasattr(prof, y_axis) or not hasattr(prof, value_axis):
+            print(f"Profile {i} missing required fields, skipping.")
+            continue
 
-        # 5.2 Surface L/Ledd vs Time
-        # if "log_L" in history.columns and "photosphere_opacity" in history.columns:
-        M = mass * 1.989e33
-        L = 10**history.log_L * 3.828e33
-        kappa = history.photosphere_opacity
-        Ledd_surface = 4 * np.pi * 6.6743e-8 * M * 2.998e10 / kappa
-        ax5b.plot(history.star_age, L / Ledd_surface, label=name, linewidth=0.8)
+        profiles.append(f_path)
+        model_numbers.append(getattr(prof,'model_number'))
 
-        # 6. Luminosity Fractions
-        # if "luminosity" in prof.columns and "conv_L" in prof.columns:
-        L_tot = prof.luminosity[-1]
-        ax6.plot(prof.mass, prof.luminosity / L_tot, label=f"Rad {name}", linewidth=0.8)
-        ax6.plot(prof.mass, prof.conv_L / L_tot, "--", label=f"Conv {name}", linewidth=0.8)
+        Y_all.append(np.array(getattr(prof, y_axis), dtype=float))
+        VAL_all.append(np.array(getattr(prof, value_axis), dtype=float))
 
-    except FileNotFoundError:
-        print(f"⚠️ Warning: {path} not found. Skipping.")
+    if not profiles:
+        raise FileNotFoundError("No profiles found.")
 
-# -------------------------------
-# Final formatting + save
-# -------------------------------
+    # Build common y-grid (vertical axis)
+    min_y = min(np.min(arr) for arr in Y_all)
+    max_y = max(np.max(arr) for arr in Y_all)
+    n_points = max(len(arr) for arr in Y_all)
 
-# 1.2
-ax1.set_xlabel(r"$\log T$ [K]")
-ax1.set_ylabel(r"$\kappa$ [cm²/g]")
-ax1.set_title("Opacity vs Temperature")
-ax1.set_yscale("log"); ax1.grid(True); ax1.legend()
-fig1.tight_layout(); fig1.savefig("1_opacity.png", dpi=300)
+    common_y = np.linspace(min_y, max_y, n_points)
 
-# 2
-ax2.set_xlabel("Mass [$M_⊙$]")
-ax2.set_ylabel("Luminosity [$L_⊙$]")
-ax2.set_title("Luminosity vs Eddington Luminosity")
-ax2.set_yscale("log"); ax2.grid(True); ax2.legend()
-fig2.tight_layout(); fig2.savefig("2_L_vs_Ledd.png", dpi=300)
+    # Heatmap matrix
+    n_models = len(model_numbers)
+    DATA = np.zeros((n_points, n_models))
 
-# 3
-ax3.set_xlabel("Radius [$R_⊙$]")
-ax3.set_ylabel("Flux [erg/s/cm²]")
-ax3.set_title("Radiative vs Eddington Flux")
-ax3.set_yscale("log"); ax3.grid(True); ax3.legend()
-fig3.tight_layout(); fig3.savefig("3_flux.png", dpi=300)
+    # Fill the heatmap interpolating each profile
+    for j in range(n_models):
+        y_data = Y_all[j]
+        val_data = VAL_all[j]
 
-# 4
-ax4.set_xlabel(r"$\kappa$ [cm²/g]")
-ax4.set_ylabel("F_rad [erg/s/cm²]")
-ax4.set_title("Opacity vs Flux")
-ax4.set_xscale("log"); ax4.set_yscale("log"); ax4.grid(True); ax4.legend()
-fig4.tight_layout(); fig4.savefig("4_opacity_vs_flux.png", dpi=300)
+        # Interpolate to common y grid
+        interp_val = np.interp(common_y, y_data, val_data)
+        DATA[:, j] = interp_val
 
-# 5a
-ax5a.set_xlabel("Age [yr]")
-ax5a.set_ylabel(r"$\kappa_c$ [cm²/g]")
-ax5a.set_title("Central Opacity vs Time")
-ax5a.set_yscale("log"); ax5a.grid(True); ax5a.legend()
-fig5a.tight_layout(); fig5a.savefig("5a_center_opacity.png", dpi=300)
+    # Save raw matrix for debugging
+    with open('tmp.json', 'w') as f:
+        json.dump(DATA.tolist(), f)
 
-# 5b
-ax5b.set_xlabel("Age [yr]")
-ax5b.set_ylabel(r"$L/L_{\rm Edd}$")
-ax5b.set_title("Surface L/Ledd vs Time")
-ax5b.set_yscale("log"); ax5b.grid(True); ax5b.legend()
-fig5b.tight_layout(); fig5b.savefig("5b_L_over_Ledd.png", dpi=300)
+    # Sort by model number (important!)
+    model_numbers = np.array(model_numbers)
+    sort_idx = np.argsort(model_numbers)
 
-# 6
-ax6.set_xlabel("Mass [$M_⊙$]")
-ax6.set_ylabel("Fraction of L")
-ax6.set_title("Radiative vs Convective Luminosity Fractions")
-ax6.grid(True); ax6.legend()
-fig6.tight_layout(); fig6.savefig("6_luminosity_fractions.png", dpi=300)
+    DATA = DATA[:, sort_idx]
+    model_numbers = model_numbers[sort_idx]
 
-plt.close("all")
+    # Plot heatmap
+    plt.figure(figsize=(10, 6))
+    plt.imshow(
+        DATA,
+        cmap='viridis',
+        origin='lower',
+        aspect='auto',
+        extent=[model_numbers[0], model_numbers[-1], common_y[0], common_y[-1]]
+    )
+
+    plt.colorbar(label=f"{value_axis}")
+    plt.xlabel("Model Number")
+    plt.ylabel(f"{y_axis} [{y_units}]")
+    plt.title(f"{value_axis} vs {y_axis} across Model Number")
+
+    plt.tight_layout()
+    plt.savefig(f"HEATMAP_{value_axis}_vs_{y_axis}.png", dpi=300)
+    plt.close()
+
+
+# RUN
+plot(
+    model_var="model_number",
+    y_axis="logRho",
+    y_units="g/cm^3",
+    value_axis="extra_opacity_factor"
+)
