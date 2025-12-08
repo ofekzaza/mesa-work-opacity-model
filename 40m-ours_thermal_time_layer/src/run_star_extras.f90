@@ -83,14 +83,16 @@
                      Egrav_layer = 0d0
 
                      do j = i, s%nz
-                        m_enc = s%m(j)        ! enclosed mass at outer face (g)
-                        r_enc = s%r(j)        ! radius at outer face (cm)
-                        dm    = s%dm(j)       ! zone mass (g)
+                        ! m_enc = s%m(j)        ! enclosed mass at outer face (g)
+                        ! r_enc = s%r(j)        ! radius at outer face (cm)
+                        ! dm    = s%dm(j)       ! zone mass (g)
 
-                        if (r_enc > 0d0) then
-                           Egrav_layer = Egrav_layer - Gc * m_enc / r_enc * dm
-                        end if
+                        !   if (r_enc > 0d0) then
+                        !    Egrav_layer = Egrav_layer - Gc * m_enc / r_enc * dm
+                        ! end if
+                        Egrav_layer = Egrav_layer + s% m_grav(i)
                      end do
+                     Egrav_layer = Egrav_layer ** 2 / s% r(i)
 
                      s% extra_opacity_factor(i) = opacity_target + EXP(- s% time_step / (abs(Egrav_layer) / Lphot_cgs)) * (1 - opacity_target)
                      ! print *, '*s% extra_opacity_factor(i)', s% extra_opacity_factor(i)

@@ -675,8 +675,8 @@ file_extension = 'png'           ! common names are 'png' and 'ps'
 !file_extension = 'ps'           ! common names are 'png' and 'ps'
 
 
-kipp_win_flag=.true.
-kipp_file_flag=.true.
+kipp_win_flag=.false.
+kipp_file_flag=.false.
 
 
 / ! end of pgstar namelist

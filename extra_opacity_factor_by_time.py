@@ -234,7 +234,7 @@ import matplotlib.pyplot as plt
 def plot(x_axis: str, x_units: str, y_axis: str, y_units: str):
     for index in [2]: # SET HEATMAP index
         name = f"ours_interval_{index}"
-        name = "ours_thermal_time"
+        name = "ours_thermal_time_layer"
         path = f"{mass}m-{name}/LOGS"
         try:
             print(path)
