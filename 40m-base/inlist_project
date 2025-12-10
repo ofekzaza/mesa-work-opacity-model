@@ -46,7 +46,9 @@
 
   ! when to stop
 
-    stop_at_phase_C_Burn = .true.
+    ! stop_at_phase_C_Burn = .true.
+    stop_at_phase_Si_Burn = .true.
+    ! stop_at_phase_WDCS = .true.
 
   ! wind
 
