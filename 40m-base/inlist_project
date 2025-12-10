@@ -77,4 +77,28 @@
 
   ! output
 
+  ! mlt++
+    ! MLT_option = 'TDC'
+    ! okay_to_reduce_gradT_excess = .true.
+    ! gradT_excess_max_change = 0.01d0
+  
+  ! superad a = 2
+    ! MLT_option = 'TDC'
+    ! use_superad_reduction = .true.
+    ! superad_reduction_Gamma_limit = 0.5d0
+    ! superad_reduction_Gamma_limit_scale = 2d0
+    ! superad_reduction_Gamma_inv_scale = 2d0
+    ! superad_reduction_diff_grads_limit = 1d-2 ! this is lowered to 1d-2 in the first 100 steps in run_star_extras
+    ! superad_reduction_limit = -1d0
+  
+
+  ! superad a = 5
+    ! MLT_option = 'TDC'
+    ! use_superad_reduction = .true.
+    ! superad_reduction_Gamma_limit = 0.5d0
+    ! superad_reduction_Gamma_limit_scale = 5d0
+    ! superad_reduction_Gamma_inv_scale = 5d0
+    ! superad_reduction_diff_grads_limit = 1d-2 ! this is lowered to 1d-2 in the first 100 steps in run_star_extras
+    ! superad_reduction_limit = -1d0
+
 / ! end of controls namelist

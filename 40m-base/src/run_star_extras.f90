@@ -147,6 +147,13 @@
             call star_ptr(id, s, ierr)
             if (ierr /= 0) return
             extras_start_step = 0
+
+            !!slowly turn on superad reduction to make it easier to produce pre-MS models
+            !if (s% star_age >= 0.01d0) then
+            !   s% superad_reduction_diff_grads_limit = 1d-2
+            !else
+            !   s% superad_reduction_diff_grads_limit = 10**(2-4d0*(s% star_age)/0.01d0)
+            !end if
          end function extras_start_step
    
    
