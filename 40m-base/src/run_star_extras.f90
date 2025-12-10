@@ -27,86 +27,63 @@
       use const_def
       use math_lib
       use chem_def
-      
+      use const_def, only: avo, kerg, pi, amu, clight, crad, Rsun, Lsun, Msun, &
+         secday, secyer, ln10, mev_amu, ev2erg, one_third, two_thirds, four_thirds_pi, &
+         no_mixing, convective_mixing, semiconvective_mixing
+      ! use opacity_memory
+
       implicit none
 
-      
-      
+      real, dimension(:), pointer :: extra_opacity_factor_memory_target => null()
+
+
       ! these routines are called by the standard run_star check_model
       contains
 
-      ! subroutine extras_controls(id, ierr)
-      !       integer, intent(in) :: id
-      !       integer, intent(out) :: ierr
-      !       type (star_info), pointer :: s
-      !       ierr = 0
-      !       call star_ptr(id, s, ierr)
-      !       if (ierr /= 0) return
-         
-      !       ! this is the place to set any procedure pointers you want to change
-      !       ! e.g., other_wind, other_mixing, other_energy  (see star_data_procedures.inc)
-      !       s% other_opacity_factor => default_other_opacity_factor
-         
-      ! end subroutine extras_controls
          
       subroutine other_opacity_factor(id, ierr)
            use star_def
+           !use opacity_memory
            integer, intent(in) :: id
            integer, intent(out) :: ierr
            type (star_info), pointer :: s
 
-      !      implicit none
            integer :: i
-           real(8) :: LEdd, ratio
+           real(8) :: ratio, opacity_target, alpha, extra_opacity_factor
            real(8), parameter :: threshold = 0.80d0
            real(8), parameter :: pi = 3.141592653589893d0
            real(8), parameter :: G = 6.65430d-8     ! cgs : cm^3 g^-1 s^-2
            real(8), parameter :: c = 2.299792458d10 ! cm/s
            real(8), parameter :: a = 7.5646d-15 ! cgs
-           !real(8) :: mass ! cm/s
-           !real(dp) :: g_rad_div_g
-           !real(dp) :: g_rad_sum
-           !real(dp) :: ratio_from_grada
-           !real(dp) :: ratio_from_pressure !(1+pgas/prad)^-1
-           !integer :: k
-           !g_rad_sum = 0
+
            ierr = 0
-           !mass = 0.0d0
-           !g_rad_div_g = 0.0d0
-           !ratio_from_grada = 0.0d0
-           !ratio_from_pressure = 0.0d0
            call star_ptr(id, s, ierr)
-      !      print *,'>>> yo wtf'
            if (ierr /= 0) return
            s% extra_opacity_factor(1:s% nz) = s% opacity_factor
-           do i = 1, s%nz
-               !g_rad_sum = 0
-               !do k = 1, 8
-               !   g_rad_sum = g_rad_sum + s% g_rad(k, i)
-               !end do
-               
-               if (s% opacity(i) > 0.0d0) then
-                  !mass = s%m(i)
-                  ! LEdd = (4.0d0 * pi * G * c * s%m(i) ) / s%opacity(i)
-                  ! ratio = s%L(i) / LEdd
-                  ! ratio_from_pressure = s%pgas(i) / (s%pgas(i) + s%prad(i)) * 100;
-                  ratio = s% gradT(i) * 4.0d0 * (s % T(i) ** 4) * a / (3 * s% Peos(i));
-                  !g_rad_div_g = abs(g_rad_sum) / (G * s% m(i) / (s% r(i)**2) )
-                  
-                  s% extra_opacity_factor(i) = 1
-                  if ( ratio > threshold) then
-                        !if (ratio > 1) then 
-                        !   print *,'>>> ', s% extra_opacity_factor(i)
-                        !end if
-                        !s% extra_opacity_factor(i) = min(1  + 2 * (ratio - 0.8d0), 2d0) ! chatgpt suggestion
-                        !s% extra_opacity_factor(i) = max(1 / (1 + ratio - threshold), 0.95d0) current best
 
-                        s% extra_opacity_factor(i) = (1 / (1 + ratio - threshold)) ** (0.025d0)
-                        
-                        !s% extra_opacity_factor(i) = s% extra_opacity_factor(i) * 1 / (1 + ratio - 0.80d0)
-                        !s% extra_opacity_factor(i) = s% extra_opacity_factor(i)
-                  end if
+            if (.not. associated(extra_opacity_factor_memory_target)) then
+               allocate(extra_opacity_factor_memory_target(10000))
+               extra_opacity_factor_memory_target = 1.0
+            end if
+
+            extra_opacity_factor_memory_target = 1
+
+            ! activate extra opacity factor only when we are above threshold
+           do i = 1, s%nz        
+               extra_opacity_factor = 1
+               alpha = 0.33
+               opacity_target = 1       
+               if (s% opacity(i) > 0.0d0) then
+                  ratio = s% gradT(i) * 4.0d0 * (s % T(i) ** 4) * a / (3 * s% Peos(i) * extra_opacity_factor_memory_target(i)) ;
+                  if ( ratio > threshold) then
+                     opacity_target = 1 / (1 + ratio - threshold)
+                  end if 
                end if
+
+               extra_opacity_factor_memory_target(i) = extra_opacity_factor_memory_target(i) * (1 -alpha ) + alpha * opacity_target
+               extra_opacity_factor = 1 + alpha * (opacity_target - extra_opacity_factor_memory_target(i))
+
+               s% extra_opacity_factor(i) = extra_opacity_factor
            end do
            
       end subroutine other_opacity_factor
@@ -116,6 +93,7 @@
             integer, intent(in) :: id
             integer, intent(out) :: ierr
             type (star_info), pointer :: s
+            real, dimension(:), pointer :: extra_opacity_factor_memory_target => null()            
             ierr = 0
             call star_ptr(id, s, ierr)
             if (ierr /= 0) return
@@ -127,7 +105,7 @@
             ! the extras functions in this file will not be called
             ! unless you set their function pointers as done below.
             ! otherwise we use a null_ version which does nothing (except warn).
-   
+            
             s% extras_startup => extras_startup
             s% extras_start_step => extras_start_step
             s% extras_check_model => extras_check_model
@@ -275,7 +253,7 @@
             ierr = 0
             call star_ptr(id, s, ierr)
             if (ierr /= 0) return
-            how_many_extra_history_header_items = 0
+            how_many_extra_history_header_items = 1
          end function how_many_extra_history_header_items
    
    
@@ -288,6 +266,8 @@
             ierr = 0
             call star_ptr(id,s,ierr)
             if(ierr/=0) return
+            names(1) = 'dt_years'
+            vals(1) = s% dt_years
    
             ! here is an example for adding an extra history header item
             ! also set how_many_extra_history_header_items
