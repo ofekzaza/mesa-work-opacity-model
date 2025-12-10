@@ -544,7 +544,7 @@ Mixing_file_aspect_ratio = -1 ! negative means use same value as for window
 
 
          ! file output
-         HR_file_flag = .false.
+         HR_file_flag = .true.
          HR_file_dir = 'png'
          HR_file_prefix = 'hr_'
          HR_file_interval = 10 ! output when `mod(model_number,HR_file_interval)==0`
