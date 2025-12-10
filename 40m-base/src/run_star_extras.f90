@@ -49,7 +49,7 @@
            type (star_info), pointer :: s
 
            integer :: i
-           real(8) :: ratio, opacity_target, alpha, extra_opacity_factor
+           real(8) :: ratio, opacity_target, alpha
            real(8), parameter :: threshold = 0.80d0
            real(8), parameter :: pi = 3.141592653589893d0
            real(8), parameter :: G = 6.65430d-8     ! cgs : cm^3 g^-1 s^-2
@@ -70,7 +70,6 @@
 
             ! activate extra opacity factor only when we are above threshold
            do i = 1, s%nz        
-               extra_opacity_factor = 1
                alpha = 0.33
                opacity_target = 1       
                if (s% opacity(i) > 0.0d0) then
@@ -80,10 +79,9 @@
                   end if 
                end if
 
-               extra_opacity_factor_memory_target(i) = extra_opacity_factor_memory_target(i) * (1 -alpha ) + alpha * opacity_target
-               extra_opacity_factor = 1 + alpha * (opacity_target - extra_opacity_factor_memory_target(i))
+               extra_opacity_factor_memory_target(i) = extra_opacity_factor_memory_target(i) * (1 - alpha ) + alpha * opacity_target
 
-               s% extra_opacity_factor(i) = extra_opacity_factor
+               s% extra_opacity_factor(i) = 1 + alpha * (opacity_target - extra_opacity_factor_memory_target(i))
            end do
            
       end subroutine other_opacity_factor
