@@ -27,6 +27,9 @@
       use const_def
       use math_lib
       use chem_def
+      use const_def, only: avo, kerg, pi, amu, clight, crad, Rsun, Lsun, Msun, &
+         secday, secyer, ln10, mev_amu, ev2erg, one_third, two_thirds, four_thirds_pi, &
+         no_mixing, convective_mixing, semiconvective_mixing
       ! use opacity_memory
 
       implicit none
@@ -46,7 +49,7 @@
            type (star_info), pointer :: s
 
            integer :: i, j
-           real(8) :: LEdd, ratio, opacity_target
+           real(8) :: LEdd, ratio, opacity_target, alpha
            real(8), parameter :: threshold = 0.80d0
            real(8), parameter :: pi = 3.141592653589893d0
            real(8), parameter :: G = 6.65430d-8     ! cgs : cm^3 g^-1 s^-2
@@ -68,13 +71,13 @@
                if (s% opacity(i) > 0.0d0) then
                   ratio = s% gradT(i) * 4.0d0 * (s % T(i) ** 4) * a / (3 * s% Peos(i) * extra_opacity_factor_memory(i)) ;
                   s% extra_opacity_factor(i) = 1
+                  alpha = 0.33
+                  opacity_target = 1
                   if ( ratio > threshold) then
                      opacity_target = 1 / (1 + ratio - threshold)
-                     ! you can calculate kh_timescale by sum(E_grav(n) from i to s%nz / L_photosphere which is probably s%L(s%nz)
-                     !s% extra_opacity_factor(i) = opacity_target ** EXP(- s% dt_years / s% kh_timescale)
-                      s% extra_opacity_factor(i) = opacity_target + EXP(- s% dt_years / s% kh_timescale) * (1 - opacity_target)
-                     ! print *, '*s% extra_opacity_factor(i)', s% extra_opacity_factor(i)
                   end if 
+                  s% extra_opacity_factor(i) = 1 - extra_opacity_factor_memory(i) + extra_opacity_factor_memory(i) * (1 - alpha) + alpha * opacity_target
+
                end if
            end do
 

@@ -54,7 +54,7 @@
     !xa_central_lower_limit(1) = 1d-3
     !xa_surface_upper_limit_species(1) = 'o16'
     !xa_surface_upper_limit(1) = 1d-3
-    stop_at_phase_C_Burn = .true.
+    stop_at_phase_O_Burn = .true.
     !power_h_burn_upper_limit = 1d99
     !xa_surface_upper_limit_species(1) = 'c12'
     !xa_surface_upper_limit(1) = 0.5

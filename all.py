@@ -16,6 +16,7 @@ def plot(model_var: str, y_axis: str, y_units: str, value_axis: str):
     mass = 40
     name = "ours_thermal_time4"
     name = "ours_thermal_time_by_thermal_kh"
+    name = "ours_thermal_time"
     path = f"{mass}m-{name}/LOGS"
 
     print(f"Reading profiles from: {path}")
@@ -91,7 +92,7 @@ def plot(model_var: str, y_axis: str, y_units: str, value_axis: str):
         origin="lower",
         aspect="auto",
         vmax=1,
-        # vmin=math.floor(np.min(DATA)*100)/100,
+        vmin=math.floor(np.min(DATA)*100)/100,
         extent=[model_numbers[0], model_numbers[-1], common_y[0], common_y[-1]],
     )
 

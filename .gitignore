@@ -1,2 +1,5 @@
 */png/
-*/photos/
+*/photos
+**/photos/**
+*/photos/x**
+*/photos

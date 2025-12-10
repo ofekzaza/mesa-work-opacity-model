@@ -31,7 +31,10 @@ def plot(names: list[str], mass: int, x_axis: str, y_axis: str, y_scale: str):
             history = mr.MesaData(path)
             # Plot log_L vs. log_Teff
             x = getattr(history, x_axis)
-            y = getattr(history, y_axis)
+            if y_axis == "1":
+                y = getattr(history, "time_step") / getattr(history, "kh_timescale")
+            else:
+                y = getattr(history, y_axis)
             (line,) = plt.plot(x, y, label=name, linewidth=0.8)
             color = line.get_color()
             plt.plot(x[-1], y[-1], "o", color=color)
@@ -52,7 +55,7 @@ def plot(names: list[str], mass: int, x_axis: str, y_axis: str, y_scale: str):
     plt.savefig(f"Mass_{mass}_{y_axis}_vs_{x_axis}.png", dpi=300)
     plt.close()
 
-todo = [("model_number", "time_step_sec", "log"), ("model_number", "kh_timescale", "log")]
+todo = [("model_number", "1", "notlog"), ("model_number", "time_step_sec", "log"), ("model_number", "kh_timescale", "log")]
 for (x_axis, y_axis, scale) in todo:
     print(x_axis, y_axis)
     plot(names, mass, x_axis, y_axis, scale)
