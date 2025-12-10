@@ -34,7 +34,7 @@
 
       implicit none
 
-      real, dimension(:), pointer :: extra_opacity_factor_memory => null()
+      real, dimension(:), pointer :: extra_opacity_factor_memory_target => null()
 
 
       ! these routines are called by the standard run_star check_model
@@ -48,8 +48,8 @@
            integer, intent(out) :: ierr
            type (star_info), pointer :: s
 
-           integer :: i, j
-           real(8) :: LEdd, ratio, opacity_target, alpha
+           integer :: i
+           real(8) :: ratio, opacity_target, alpha, extra_opacity_factor
            real(8), parameter :: threshold = 0.80d0
            real(8), parameter :: pi = 3.141592653589893d0
            real(8), parameter :: G = 6.65430d-8     ! cgs : cm^3 g^-1 s^-2
@@ -61,30 +61,30 @@
            if (ierr /= 0) return
            s% extra_opacity_factor(1:s% nz) = s% opacity_factor
 
-            if (.not. associated(extra_opacity_factor_memory)) then
-               allocate(extra_opacity_factor_memory(10000))
-               extra_opacity_factor_memory = 1.0
+            if (.not. associated(extra_opacity_factor_memory_target)) then
+               allocate(extra_opacity_factor_memory_target(10000))
+               extra_opacity_factor_memory_target = 1.0
             end if
 
+            extra_opacity_factor_memory_target = 1
+
             ! activate extra opacity factor only when we are above threshold
-           do i = 1, s%nz               
+           do i = 1, s%nz        
+               extra_opacity_factor = 1
+               alpha = 0.33
+               opacity_target = 1       
                if (s% opacity(i) > 0.0d0) then
-                  ratio = s% gradT(i) * 4.0d0 * (s % T(i) ** 4) * a / (3 * s% Peos(i) * extra_opacity_factor_memory(i)) ;
-                  s% extra_opacity_factor(i) = 1
-                  alpha = 0.33
-                  opacity_target = 1
+                  ratio = s% gradT(i) * 4.0d0 * (s % T(i) ** 4) * a / (3 * s% Peos(i) * extra_opacity_factor_memory_target(i)) ;
                   if ( ratio > threshold) then
                      opacity_target = 1 / (1 + ratio - threshold)
                   end if 
-                  s% extra_opacity_factor(i) = 1 - extra_opacity_factor_memory(i) + extra_opacity_factor_memory(i) * (1 - alpha) + alpha * opacity_target
-
                end if
-           end do
 
-            extra_opacity_factor_memory(i) = 1
-            do i  = 1, s%nz
-               extra_opacity_factor_memory(i) = s% extra_opacity_factor(i)
-            end do 
+               extra_opacity_factor_memory_target(i) = extra_opacity_factor_memory_target(i) * (1 -alpha ) + alpha * opacity_target
+               extra_opacity_factor = 1 + alpha * (opacity_target - extra_opacity_factor_memory_target(i))
+
+               s% extra_opacity_factor(i) = extra_opacity_factor
+           end do
            
       end subroutine other_opacity_factor
 
@@ -93,7 +93,7 @@
             integer, intent(in) :: id
             integer, intent(out) :: ierr
             type (star_info), pointer :: s
-            real, dimension(:), pointer :: extra_opacity_factor_memory => null()            
+            real, dimension(:), pointer :: extra_opacity_factor_memory_target => null()            
             ierr = 0
             call star_ptr(id, s, ierr)
             if (ierr /= 0) return
