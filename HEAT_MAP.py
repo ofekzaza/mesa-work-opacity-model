@@ -6,18 +6,17 @@ import mesa_reader as mr
 import matplotlib.pyplot as plt
 
 
-def plot(model_var: str, y_axis: str, y_units: str, value_axis: str):
+def plot(mass: int, model_var: str, y_axis: str, y_units: str, value_axis: str):
     """
     model_var: the field holding model number (always 'model_number')
     y_axis: the vertical axis variable (e.g. 'logRho')
     value_axis: the heatmap color variable (e.g. 'extra_opacity_factor')
     """
 
-    mass = 40
-    name = "ours_thermal_time4"
-    name = "ours_thermal_time_by_thermal_kh"
-    name = "ours_thermal_time"
-    name = "ours_interval_3"
+    # name = "ours_thermal_time4"
+    # name = "ours_thermal_time_by_thermal_kh"
+    name = "ours"
+    # name = "ours_interval_3"
     path = f"{mass}m-{name}/LOGS"
 
     print(f"Reading profiles from: {path}")
@@ -123,14 +122,16 @@ def plot(model_var: str, y_axis: str, y_units: str, value_axis: str):
     plt.title(f"{value_axis} vs {y_axis} across Model Number")
 
     plt.tight_layout()
-    plt.savefig(f"HEATMAP_{name}_{value_axis}_vs_{y_axis}.png", dpi=300)
+    plt.savefig(f"HEATMAP_{mass}_{name}_{value_axis}_vs_{y_axis}.png", dpi=300)
     plt.close()
 
 
 # RUN
-plot(
-    model_var="model_number",
-    y_axis="logRho",
-    y_units="g/cm^3",
-    value_axis="extra_opacity_factor",
-)
+for mass in [30, 40]:
+    plot(
+        mass=mass,
+        model_var="model_number",
+        y_axis="logRho",
+        y_units="g/cm^3",
+        value_axis="extra_opacity_factor",
+    )
