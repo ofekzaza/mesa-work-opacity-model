@@ -209,16 +209,21 @@ y_axises = [
 # List of history file names (without extensions)
 names = [
     # "normal",
-    "ours_thermal_time",
-    "ours_interval_2",
-    # "ours_interval_3",
+    # "ours_interval_2",
+    "ours_interval_3",
+    # "ours_thermal_time",
     # "ours_interval_5",
     # "ours_interval_10",
+    "normal",
+    "ours",
     "mlt++",
     "supereduction_a=2",
     # "ours_interval_40",
     # "supereduction_a=5",
 ]
+
+mass = 40
+
 
 #'supereduction_a=5' empty it doesnt run
 # Initialize the plot
@@ -234,14 +239,14 @@ def plot(x_axis: str, x_units: str, y_axis: str, y_units: str):
             history = mr.MesaLogDir(path)
             # Plot log_L vs. log_Teff
             prof = mr.MesaData(f"{path}/profile{history.profile_numbers[-1]}.data")
-            if (not hasattr(prof, y_axis)):
+            if not hasattr(prof, y_axis):
                 raise ValueError(f"{y_axis} is not in prof")
-            if (not hasattr(prof, x_axis)):
+            if not hasattr(prof, x_axis):
                 raise ValueError(f"{x_axis} is not in prof")
-            
+
             x_data = getattr(prof, x_axis)
             y_data = getattr(prof, y_axis)
-            
+
             (line,) = plt.plot(x_data, y_data, "-", linewidth=0.8, label=name)
             color = line.get_color()
             plt.plot(x_data[-1], y_data[-1], "o", markersize=6, color=color)
@@ -262,6 +267,7 @@ def plot(x_axis: str, x_units: str, y_axis: str, y_units: str):
     # Save the plot
     plt.savefig(f"Mass_{mass}_{y_axis}_vs_{x_axis}.png", dpi=300)
     plt.close()
+
 
 for y_axis in y_axises:
     print(y_axis)
