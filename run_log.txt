@@ -56,3 +56,8 @@ Running ./mk...
 Folder: 40m-supereduction_a=5, Command: ./mk, Start: 2025-12-15 06:19:32, End: 2025-12-15 06:19:35, ExitCode: 0
 Running ./rn...
 Folder: 40m-supereduction_a=5, Command: ./rn, Start: 2025-12-15 06:19:35, End: 2025-12-15 06:23:18, ExitCode: 0
+
+
+# new Running
+
+
