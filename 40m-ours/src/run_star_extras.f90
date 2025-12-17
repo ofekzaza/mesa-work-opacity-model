@@ -70,7 +70,7 @@
 
             ! activate extra opacity factor only when we are above threshold
            do i = 1, s%nz        
-               alpha = 0.33
+               alpha = 0.1
                opacity_target = 1       
                if (s% opacity(i) > 0.0d0) then
                   ratio = s% gradT(i) * 4.0d0 * (s % T(i) ** 4) * a / (3 * s% Peos(i) * extra_opacity_factor_memory_target(i)) ;
@@ -81,7 +81,7 @@
 
                extra_opacity_factor_memory_target(i) = extra_opacity_factor_memory_target(i) * (1 - alpha ) + alpha * opacity_target
 
-               s% extra_opacity_factor(i) = 1 + alpha * (opacity_target - extra_opacity_factor_memory_target(i))
+               s% extra_opacity_factor(i) = extra_opacity_factor_memory_target(i)
            end do
            
       end subroutine other_opacity_factor

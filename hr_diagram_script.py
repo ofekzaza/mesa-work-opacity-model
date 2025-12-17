@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 # List of history file names (without extensions)
 names = [
     # "normal",
-    "ours_interval_2",
+    # "ours_interval_2",
     "ours_interval_3",
     # "ours_thermal_time",
     # "ours_interval_5",
