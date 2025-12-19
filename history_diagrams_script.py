@@ -1,6 +1,8 @@
 import mesa_reader as mr
 import matplotlib.pyplot as plt
 
+import os
+
 # List of history file names (without extensions)
 names = [
     # "normal",
@@ -20,12 +22,13 @@ plt.figure()
 
 mass = 40
 
+
 # Iterate over each history file
 def plot(names: list[str], mass: int, x_axis: str, y_axis: str, y_scale: str):
     plt.figure()
     for name in names:
         path = f"{mass}m-{name}/LOGS/history.data"
-        
+
         try:
             # Load the history data
             history = mr.MesaData(path)
@@ -52,10 +55,16 @@ def plot(names: list[str], mass: int, x_axis: str, y_axis: str, y_scale: str):
     plt.tight_layout()
 
     # Save the plot
-    plt.savefig(f"Mass_{mass}_{y_axis}_vs_{x_axis}.png", dpi=300)
+    os.makedirs(f"plot{mass}m", exist_ok=True)
+    plt.savefig(f"plot{mass}m/Mass_{mass}_{y_axis}_vs_{x_axis}.png", dpi=300)
     plt.close()
 
-todo = [("model_number", "1", "notlog"), ("model_number", "time_step_sec", "log"), ("model_number", "kh_timescale", "log")]
-for (x_axis, y_axis, scale) in todo:
+
+todo = [
+    ("model_number", "1", "notlog"),
+    ("model_number", "time_step_sec", "log"),
+    ("model_number", "kh_timescale", "log"),
+]
+for x_axis, y_axis, scale in todo:
     print(x_axis, y_axis)
     plot(names, mass, x_axis, y_axis, scale)

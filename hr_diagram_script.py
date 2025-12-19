@@ -1,11 +1,12 @@
 import mesa_reader as mr
 import matplotlib.pyplot as plt
+import os
 
 # List of history file names (without extensions)
 names = [
     # "normal",
     # "ours_interval_2",
-    "ours_interval_3",
+    # "ours_interval_3",
     # "ours_thermal_time",
     # "ours_interval_5",
     # "ours_interval_10",
@@ -14,13 +15,13 @@ names = [
     "mlt++",
     "supereduction_a=2",
     # "ours_interval_40",
-    "supereduction_a=5",
+    # "supereduction_a=5",
 ]
 #'supereduction_a=5' empty it doesnt run
 # Initialize the plot
 plt.figure()
 
-mass = 40
+mass = 50
 
 # Iterate over each history file
 for name in names:
@@ -45,5 +46,6 @@ plt.legend()
 plt.tight_layout()
 
 # Save the plot
-plt.savefig(f"mass_{mass}_hr_diagram_comparison.png", dpi=300)
+os.makedirs(f"plot{mass}m", exist_ok=True)
+plt.savefig(f"plot{mass}m/mass_{mass}_hr_diagram_comparison.png", dpi=300)
 plt.close()

@@ -232,7 +232,7 @@ import matplotlib.pyplot as plt
 
 
 def plot(x_axis: str, x_units: str, y_axis: str, y_units: str):
-    for index in [2]: # SET HEATMAP index
+    for index in [2]:  # SET HEATMAP index
         name = f"ours_interval_{index}"
         name = "ours_thermal_time_layer"
         path = f"{mass}m-{name}/LOGS"
@@ -280,32 +280,31 @@ def plot(x_axis: str, x_units: str, y_axis: str, y_units: str):
                 data[:, j_index] = y_interp * 100  # scale if needed
 
             # Save raw matrix (debug)
-            with open('tmp.json', 'w') as f:
+            with open("tmp.json", "w") as f:
                 json.dump(data.tolist(), f)
 
             # Plot heatmap
             plt.figure(figsize=(8, 6))
             plt.imshow(
                 data,
-                cmap='viridis',
-                origin='lower',
-                aspect='auto',
-                extent=[0, n_profiles, common_x[0], common_x[-1]]
+                cmap="viridis",
+                origin="lower",
+                aspect="auto",
+                extent=[0, n_profiles, common_x[0], common_x[-1]],
             )
             plt.colorbar(label=f"{y_axis} [{y_units}]")
             plt.xlabel("Profile Index")
             plt.ylabel(f"{x_axis} [{x_units}]")
             plt.title(f"Mass {mass}: {y_axis} vs {x_axis}")
             plt.tight_layout()
-            plt.savefig(f"Mass_{mass}_HEATMAP_{name}.png", dpi=300)
+            os.makedirs(f"plot{mass}m", exist_ok=True)
+            plt.savefig(f"plot{mass}m/Mass_{mass}_HEATMAP_{name}.png", dpi=300)
             plt.close()
 
         except FileNotFoundError:
             print(f"Warning: {path} not found. Skipping.")
 
 
-
 # for y_axis in y_axises:
 y_axis = "extra_opacity_factor"
 plot(x_axis="logRho", x_units="g/cm^3", y_axis=y_axis, y_units="")
-

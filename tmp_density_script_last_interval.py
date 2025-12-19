@@ -1,7 +1,8 @@
 import mesa_reader as mr
 import matplotlib.pyplot as plt
+import os
 
-mass = 30
+mass = 50
 
 # List of history file names (without extensions)
 names = [
@@ -16,7 +17,7 @@ names = [
     "mlt++",
     "supereduction_a=2",
     # "ours_interval_40",
-    "supereduction_a=5",
+    # "supereduction_a=5",
 ]
 #'supereduction_a=5' empty it doesnt run
 # Initialize the plot
@@ -45,7 +46,7 @@ plt.title(f"mass {mass}: Temperature vs Density at onset of Carbon burning")
 plt.grid(True)
 plt.legend()
 plt.tight_layout()
-
+os.makedirs(f"plot{mass}m", exist_ok=True)
 # Save the plot
-plt.savefig(f"Mass_{mass}_Temperature_vs_Density.png", dpi=300)
+plt.savefig(f"plot{mass}m/Mass_{mass}_Temperature_vs_Density.png", dpi=300)
 plt.close()

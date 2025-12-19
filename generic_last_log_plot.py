@@ -194,8 +194,7 @@ dRhodr_info
 log_du_kick_div_du
 L_div_Ledd_effective
 """
-
-mass = 40
+import os
 
 y_axises = [
     "L_div_Ledd_effective",
@@ -210,7 +209,7 @@ y_axises = [
 names = [
     # "normal",
     # "ours_interval_2",
-    "ours_interval_3",
+    # "ours_interval_3",
     # "ours_thermal_time",
     # "ours_interval_5",
     # "ours_interval_10",
@@ -222,7 +221,7 @@ names = [
     # "supereduction_a=5",
 ]
 
-mass = 40
+mass = 50
 
 
 #'supereduction_a=5' empty it doesnt run
@@ -265,7 +264,8 @@ def plot(x_axis: str, x_units: str, y_axis: str, y_units: str):
     plt.tight_layout()
 
     # Save the plot
-    plt.savefig(f"Mass_{mass}_{y_axis}_vs_{x_axis}.png", dpi=300)
+    os.makedirs(f"plot{mass}m", exist_ok=True)
+    plt.savefig(f"plot{mass}m/Mass_{mass}_{y_axis}_vs_{x_axis}.png", dpi=300)
     plt.close()
 
 
