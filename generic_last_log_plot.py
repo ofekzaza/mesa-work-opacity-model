@@ -218,10 +218,10 @@ names = [
     "mlt++",
     "supereduction_a=2",
     # "ours_interval_40",
-    # "supereduction_a=5",
+    "supereduction_a=5",
 ]
 
-mass = 50
+mass = 30
 
 
 #'supereduction_a=5' empty it doesnt run
