@@ -81,7 +81,7 @@
 
                extra_opacity_factor_memory_target(i) = extra_opacity_factor_memory_target(i) * (1 - alpha ) + alpha * opacity_target
 
-               s% extra_opacity_factor(i) = 1 + alpha * (opacity_target - extra_opacity_factor_memory_target(i))
+               s% extra_opacity_factor(i) = extra_opacity_factor_memory_target(i)
            end do
            
       end subroutine other_opacity_factor

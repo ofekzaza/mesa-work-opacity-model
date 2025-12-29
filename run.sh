@@ -6,8 +6,7 @@ LOG_FILE="$(pwd)/run_log.txt"
 # Loop through specific 30m directories
 # "30m-mlt++" "30m-normal" "30m-ours" "30m-supereduction_a=2" "30m-supereduction_a=5"
 # for dir in "30m-ours" "30m-mlt++" "30m-normal" "30m-supereduction_a=2" "30m-supereduction_a=5" "40m-ours" "40m-normal" "40m-mlt++" "40m-supereduction_a=2" "50m-ours" "50m-mlt++" "50m-normal" "50m-supereduction_a=2"; do
-for dir in "60m-ours" "60m-mlt++" "60m-normal" "60m-supereduction_a=2"; do
-
+for dir in "80m-ours" "80m-supereduction_a=2"; do
     if [ -d "$dir" ]; then
         echo "Entering $dir" >> "$LOG_FILE"
         cd "$dir" || continue

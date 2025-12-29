@@ -1,4 +1,4 @@
-          56 models.    lines hold model number, priority, and profile number.
+          58 models.    lines hold model number, priority, and profile number.
           50           1           1
          100           1           2
          150           1           3
@@ -54,4 +54,6 @@
         2650           1          53
         2700           1          54
         2750           1          55
-        2773           3          56
+        2800           1          56
+        2850           1          57
+        2869           3          58
