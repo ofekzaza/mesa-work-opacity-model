@@ -51,6 +51,18 @@
     ! stop_at_phase_WDCS = .true.
 
   ! wind
+  ! --- Standard Wind Scheme ---
+  hot_wind_scheme = 'Dutch'
+  Dutch_scaling_factor = 0.33      ! Accounts for wind clumping (standard 2026 practice)
+
+  ! ! --- Rotation Settings ---
+  ! new_rotation_flag = .true.
+  ! initial_zams_omega_div_omega_crit = 0.4
+
+  ! ! --- How Rotation Boosts the Dutch Wind ---
+  ! rotation_wind_scheme = 'Heger'   ! The "Heger" part handles the rotation boost
+  ! rotational_mdot_boost_fac = 0.43 ! The power-law exponent for the boost
+  ! max_rotational_mdot_boost = 10.0 ! Safety cap for 80 Msun stars near critical rotation
 
   ! atmosphere
 
