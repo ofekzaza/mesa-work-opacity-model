@@ -10,18 +10,18 @@ names = [
     # "ours_thermal_time",
     # "ours_interval_5",
     # "ours_interval_10",
-    "normal",
+    # "normal",
     "ours",
-    "mlt++",
+    # "mlt++",
     "supereduction_a=2",
     # "ours_interval_40",
-    "supereduction_a=5",
+    # "supereduction_a=5",
 ]
 #'supereduction_a=5' empty it doesnt run
 # Initialize the plot
 plt.figure()
 
-mass = 30
+mass = 80
 
 # Iterate over each history file
 for name in names:

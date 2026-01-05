@@ -15,7 +15,7 @@ def plot(mass: int, model_var: str, y_axis: str, y_units: str, value_axis: str):
 
     # name = "ours_thermal_time4"
     # name = "ours_thermal_time_by_thermal_kh"
-    name = "ours copy"
+    name = "ours"
     # name = "ours_interval_3"
     path = f"{mass}m-{name}/LOGS"
 
@@ -127,7 +127,7 @@ def plot(mass: int, model_var: str, y_axis: str, y_units: str, value_axis: str):
 
 
 # RUN
-for mass in [40]:
+for mass in [60, 80]:
     plot(
         mass=mass,
         model_var="model_number",
